@@ -140,6 +140,7 @@ handlerIOError e = putStrLn (printf "IOError: %s" $ show e)
                    >> exitFailure
 
 
+
 mainGl :: IO ()
 mainGl = do [x,y,z] <- getArgs
             inp <- readFile x
@@ -156,6 +157,8 @@ mainGl = do [x,y,z] <- getArgs
             mainLoop
 
 
+
 main :: IO ()
 main = mainGl `catch` handlerIOError
+
 
