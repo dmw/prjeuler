@@ -1,5 +1,5 @@
 
-Project Eueler Solutions in Haskell
+Project Euler Solutions in Haskell
 ---
 
 This is my collection of the Project Euler problems written in
@@ -11,3 +11,5 @@ Authors
 ---
 
  Copyright(c) 2012 [Daniel Molina Wegener](https://github.com/dmw) [http://coder.cl/](http://coder.cl/)
+
+ - PS: Daniel is mentoring Herman in #haskell
