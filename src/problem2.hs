@@ -10,9 +10,11 @@ fib n = round $ phi ** fromIntegral n / sq5
               phi = (1 + sq5) / 2
 
 fibEvenSum :: Int -> Int -> Int -> Int
-fibEvenSum n m r | fib n >= m = r `seq` r
-fibEvenSum n m r | even $ fib n = n `seq` r `seq` fibEvenSum (n + 1) m (r + (fib n))
-fibEvenSum n m r = n `seq` r `seq` fibEvenSum (n + 1) m r
+fibEvenSum n m r | fib n >= m = r
+                 | even $ fib n = n `seq` r `seq`
+                                  fibEvenSum (n + 1) m (r + fib n)
+                 | otherwise = n `seq` r `seq`
+                               fibEvenSum (n + 1) m r
 
 main :: IO ()
 main = do [x] <- getArgs

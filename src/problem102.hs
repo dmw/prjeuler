@@ -96,7 +96,7 @@ displayText text font = do
 
 trgTextCont :: [LTrg] -> F.Font -> IO ()
 trgTextCont xs = displayText text
-                 where text = printf "Match: %d | Unmatch: %d" cnts cnts2
+                 where text = printf "Cont.: %d | Not Cont.: %d" cnts cnts2
                        cnts2 = length xs - cnts
                        cnts = length $ filter (trgContained zeroPt) xs
 
