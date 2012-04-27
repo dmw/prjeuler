@@ -1,3 +1,3 @@
 #!/bin/sh
 
-find ../src -maxdepth 1 -type f ! -iname '*.hs' -delete
+find ../src-haj -maxdepth 1 -type f ! -iname '*.hs' -delete
