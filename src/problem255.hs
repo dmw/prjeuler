@@ -20,7 +20,8 @@ applyHeronOp = heronOp
                where
                  heronOp :: Int -> Int -> Int -> Int -> (Int, Int)
                  heronOp o n m a | n == m = m `seq` a `seq` (m, a)
-                                 | otherwise = s `seq` t `seq` heronOp o m s t
+                                 | otherwise = s `seq` t `seq`
+                                               heronOp o m s t
                    where x = fromIntegral m
                          y = fromIntegral o / x
                          s = round ((x + y) / 2)
@@ -34,7 +35,8 @@ applyHeronRec = heronRec
                 where
                   heronRec :: Float -> Float -> Float -> Float
                   heronRec n m r | m >= r = n
-                                 | otherwise = b `seq` c `seq` heronRec b c r
+                                 | otherwise = b `seq` c `seq`
+                                               heronRec b c r
                     where a = fromIntegral $ snd $ applyHeron $ round m
                           b = n + a
                           c = m + 1
