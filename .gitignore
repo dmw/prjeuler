@@ -8,3 +8,4 @@
 *.hp
 *.hi
 *.bin
+tmp/

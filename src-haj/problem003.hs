@@ -15,25 +15,29 @@ module Main where
 
 findLargestPrimeFactor :: Integer -> Integer
 findLargestPrimeFactor x
-  | (x < 1)   = error "There's no prime factor for these numbers!"
-  | otherwise = findLargestPrimeFactorAux (x-1) x 
+  | (x <= 1)   = error "There's no prime factor for this numbers!"
+  | otherwise  = findLargestPrimeFactorAux 2 x 
 
 findLargestPrimeFactorAux :: Integer -> Integer -> Integer
-findLargestPrimeFactorAux 1 y = y
 findLargestPrimeFactorAux x y
-  | (y `mod` x == 0) && (isPrime x)   = x
-  | otherwise                         = findLargestPrimeFactorAux (x-1) y
+  | ( y == x )                        = y
+  | ( rem y x == 0 ) && (isPrime x)   = div y x
+  | otherwise                         = findLargestPrimeFactorAux (x + 1) y
 
 isPrime :: Integer -> Bool
 isPrime x
   | (x < 2)   = False
-  | otherwise = isPrimeAux (x - 1) x
+  | otherwise = isPrimeAux 2 x
 
 isPrimeAux :: Integer -> Integer -> Bool
-isPrimeAux 1 _       = True
 isPrimeAux x y
-  | (y `mod` x == 0) = False
-  | otherwise        = isPrimeAux (x - 1) y
+  | ( x > sqrt' y)                  = True
+  | (rem y x == 0)                  = False
+  | otherwise                       = isPrimeAux (x + 1) y
+
+sqrt' :: Integer -> Integer
+sqrt' = floor . sqrt . fromIntegral
+
 
 main = do putStrLn "Enter Value: "
           x <- readLn          
