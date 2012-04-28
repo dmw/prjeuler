@@ -6,23 +6,23 @@
 -- What is the largest prime factor of the number 600851475143 ?
 
 -- Usage:
--- $ ./problem003
--- Enter Value: 
--- 600851475143           # <-- Value entered for the problem
+-- $ ./problem003 600851475143 
+-- Where you giving as argument the number you want to evaluate
 -- <Result Here>
 
 module Main where
+import System.Environment (getArgs)
 
 findLargestPrimeFactor :: Integer -> Integer
 findLargestPrimeFactor x
   | (x <= 1)   = error "There's no prime factor for this numbers!"
-  | otherwise  = findLargestPrimeFactorAux 2 x 
+  | otherwise  = fLPFAux 2 x 
 
-findLargestPrimeFactorAux :: Integer -> Integer -> Integer
-findLargestPrimeFactorAux x y
-  | ( y == x )                        = y
-  | ( rem y x == 0 ) && (isPrime x)   = div y x
-  | otherwise                         = findLargestPrimeFactorAux (x + 1) y
+fLPFAux :: Integer -> Integer -> Integer
+fLPFAux x y
+  | ( y == x )                                  = y
+  | ( rem y x == 0 ) && (isPrime $ div y x )    = div y x
+  | otherwise                                   = fLPFAux (x + 1) y
 
 isPrime :: Integer -> Bool
 isPrime x
@@ -38,7 +38,5 @@ isPrimeAux x y
 sqrt' :: Integer -> Integer
 sqrt' = floor . sqrt . fromIntegral
 
-
-main = do putStrLn "Enter Value: "
-          x <- readLn          
-          print ( findLargestPrimeFactor x)           
+main = do x <- getArgs       
+          print ( findLargestPrimeFactor $ read $ head x)           
