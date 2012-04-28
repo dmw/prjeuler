@@ -8,7 +8,7 @@ HSC="ghc"
 
 rm -f *.hi *.hp *.o *.ps *.pdf *.png *.aux
 
-for hsf in `ls -1 *.hs`; do
+for hsf in `ls -1 *.hs | sort -n`; do
     rm -f "${hsf}.bin"
     hsbin=$(echo $hsf | sed 's/.hs/.bin/g')
     rm -f $hsbin
