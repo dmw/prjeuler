@@ -29,6 +29,8 @@
 module Main (main) where
 
 
+import Data.Digits (digits)
+import Data.List (sort)
 import System.Environment (getArgs)
 
 
@@ -39,12 +41,6 @@ fib n = round $ phi ** fromIntegral n / sq5
         where sq5 = sqrt 5 :: Double
               phi = (1 + sq5) / 2
 
--- | Calculates the number of digits for the given number x
-digs :: Int             -- ^ Digits to get from.
-        -> [Int]        -- ^ Digits
-digs 0 = [0]
-digs x = digs (x `div` 10) ++ [x `mod` 10]
-
 -- | Colection of required digits
 reqDigs :: [Int]        -- ^ Required Sequence.
 reqDigs = [1..9]
@@ -54,24 +50,32 @@ reqDigs = [1..9]
 isValidDig :: Int               -- ^ Number to Check.
               -> [Int]          -- ^ Sequence to Check.
               -> Bool           -- ^ Is valid or not.
-isValidDig x xs | length (digs x) < length xs = False
+isValidDig x xs | length (digits 10 x) < length xs = False
                 | otherwise = r == s && t == s
-                              where r = take l ds
-                                    ds = digs x
+                              where ds = digits 10 x
                                     l = length xs
-                                    s = take l xs
-                                    t = reverse $ take l ds
+                                    r = sort $ take l ds
+                                    s = sort $ take l xs
+                                    t = sort $ reverse $ take l ds
+
+-- | Checks sequentially if the given range covers the
+-- problem of pandigital sequence of digits using the reqDigs
+-- sequence.
+isValidPan :: Int               -- ^ Number to check.
+              -> Bool           -- ^ True when is valid.
+isValidPan x = r `seq` isValidDig r [1..9]
+               where r = fib x
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital problem.
 checkRange :: Int               -- ^ Starting number.
               -> Int            -- ^ End number
               -> Int            -- ^ Returning Number (-1 on failure).
-checkRange m n = sCheckRange m n n
+checkRange m n = sCheckRange m n m
   where sCheckRange x y z | z >= y = z
-                          | isValidDig z reqDigs = z
+                          | isValidPan z = (fib z)
                           | otherwise = r `seq` sCheckRange x y r
-                                        where r = r + 1
+                                        where r = z + 1
 
 -- | Reads two arguments, x and y as range, where x should be
 -- less than y and uses that range to check if it finds the
