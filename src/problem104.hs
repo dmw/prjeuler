@@ -29,34 +29,35 @@
 module Main (main) where
 
 
-import Data.Digits (digits)
-import Data.List (sort)
-import System.Environment (getArgs)
+import Data.Bits
+import Data.Digits
+import Data.List
+import System.Environment
 
 
--- | Calculates the Fibonacci Term N using the Binet's Formula.
-fib :: Int              -- ^ Term Number to Calculate.
-       -> Int           -- ^ Returning Fibonacci term.
-fib n = round $ phi ** fromIntegral n / sq5
-        where sq5 = sqrt 5 :: Double
-              phi = (1 + sq5) / 2
-
--- | Colection of required digits
-reqDigs :: [Int]        -- ^ Required Sequence.
-reqDigs = [1..9]
+-- | Calculates the Fibonacci Term N
+fib :: Int                      -- ^ Term to calculate
+       -> Integer
+fib n = snd . foldl' fib' (1, 0) . dropWhile not $
+        [testBit n k | k <- let s = bitSize n in [s - 1, s - 2 .. 0]]
+  where
+    fib' (f, g) p
+      | p         = (f * (f + 2 * g), ss)
+      | otherwise = (ss, g * (2 * f - g))
+      where ss = f * f + g * g
 
 -- | Checks if the given number x have valid last n digits
 -- and last n digits
-isValidDig :: Int               -- ^ Number to Check.
-              -> [Int]          -- ^ Sequence to Check.
+isValidDig :: Integer           -- ^ Number to Check.
+              -> [Integer]      -- ^ Sequence to Check.
               -> Bool           -- ^ Is valid or not.
 isValidDig x xs | length (digits 10 x) < length xs = False
                 | otherwise = r == s && t == s
                               where ds = digits 10 x
                                     l = length xs
+                                    s = sort xs
                                     r = sort $ take l ds
-                                    s = sort $ take l xs
-                                    t = sort $ reverse $ take l ds
+                                    t = sort $ take l $ reverse ds
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital sequence of digits using the reqDigs
@@ -68,11 +69,11 @@ isValidPan x = r `seq` isValidDig r [1..9]
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital problem.
-checkRange :: Int               -- ^ Starting number.
-              -> Int            -- ^ End number
-              -> Int            -- ^ Returning Number (-1 on failure).
+checkRange :: Int                   -- ^ Starting number.
+              -> Int                -- ^ End number
+              -> Integer            -- ^ Returning Number (-1 on failure).
 checkRange m n = sCheckRange m n m
-  where sCheckRange x y z | z >= y = z
+  where sCheckRange x y z | z >= y = -1
                           | isValidPan z = (fib z)
                           | otherwise = r `seq` sCheckRange x y r
                                         where r = z + 1
