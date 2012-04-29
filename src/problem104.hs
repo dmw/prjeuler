@@ -71,10 +71,10 @@ isValidPan x = r `seq` isValidDig r [1..9]
 -- problem of pandigital problem.
 checkRange :: Int                   -- ^ Starting number.
               -> Int                -- ^ End number
-              -> Integer            -- ^ Returning Number (-1 on failure).
+              -> Int                -- ^ Returning Number (-1 on failure).
 checkRange m n = sCheckRange m n m
   where sCheckRange x y z | z >= y = -1
-                          | isValidPan z = (fib z)
+                          | isValidPan z = z
                           | otherwise = r `seq` sCheckRange x y r
                                         where r = z + 1
 
