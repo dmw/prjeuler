@@ -56,7 +56,7 @@ heronCounter a b = sHeronCount a b a 0
   where sHeronCount x y z v
           | y == z = v
           | otherwise = let r = z + 1
-                            s = (v + (snd $ heronOp z))
+                            s = v + snd (heronOp z)
                             in sHeronCount x y r s
 
 -- | Calculates the average of Heron Operations in a range
@@ -64,14 +64,12 @@ heronCounter a b = sHeronCount a b a 0
 heronAvgCalc :: Integer            -- ^ Range lower bound.
                 -> Integer         -- ^ Range Upper bound.
                 -> Double          -- ^ Average of Heron Operations.
-heronAvgCalc x y | x < y = let r = fromIntegral x
-                               s = fromIntegral y
-                               t = fromIntegral $ heronCounter x y
-                               in t / (s - r)
-                 | x > y = let r = fromIntegral x
-                               s = fromIntegral y
-                               t = fromIntegral $ heronCounter x y
-                               in t / (r - s)
+heronAvgCalc x y | x /= y = let r = fromIntegral x
+                                s = fromIntegral y
+                                t = fromIntegral $ heronCounter x y
+                            in if s > r
+                                  then t / (s - r)
+                               else t / (r - s)
                  | otherwise = 0.0
 
 
