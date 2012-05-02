@@ -36,8 +36,8 @@ import System.Environment
 
 
 -- | Calculates the Fibonacci Term N
-fib :: Int                      -- ^ Term to calculate
-       -> Integer
+fib :: Int                      -- ^ Term to calculate.
+       -> Integer               -- ^ Fibonacci Term as Result.
 fib n = snd . foldl' fib' (1, 0) . dropWhile not $
         [testBit n k | k <- let s = bitSize n in [s - 1, s - 2 .. 0]]
   where
@@ -51,13 +51,14 @@ fib n = snd . foldl' fib' (1, 0) . dropWhile not $
 isValidDig :: Integer           -- ^ Number to Check.
               -> [Integer]      -- ^ Sequence to Check.
               -> Bool           -- ^ Is valid or not.
-isValidDig x xs | length (digits 10 x) < length xs = False
-                | otherwise = r == s && t == s
-                              where ds = digits 10 x
-                                    l = length xs
-                                    s = sort xs
-                                    r = sort $ take l ds
-                                    t = sort $ take l $ reverse ds
+isValidDig x xs
+  | length (digits 10 x) < length xs = False
+  | otherwise = let ds = digits 10 x
+                    l = length xs
+                    s = sort xs
+                    r = sort $ take l ds
+                    t = sort $ take l $ reverse ds
+                in r == s && t == s
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital sequence of digits using the reqDigs
@@ -73,10 +74,11 @@ checkRange :: Int                   -- ^ Starting number.
               -> Int                -- ^ End number
               -> Int                -- ^ Returning Number (-1 on failure).
 checkRange m n = sCheckRange m n m
-  where sCheckRange x y z | z >= y = -1
-                          | isValidPan z = z
-                          | otherwise = r `seq` sCheckRange x y r
-                                        where r = z + 1
+  where sCheckRange x y z
+          | z >= y = -1
+          | isValidPan z = z
+          | otherwise = let r = z + 1
+                        in r `seq` sCheckRange x y r
 
 -- | Reads two arguments, x and y as range, where x should be
 -- less than y and uses that range to check if it finds the

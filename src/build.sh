@@ -16,4 +16,3 @@ for hsf in `ls -1 *.hs | sort -n`; do
 done
 
 rm -f *.hi *.hp *.o *.ps *.pdf *.png *.aux *.ps *.eps *.pdf *.png *.prof
-
