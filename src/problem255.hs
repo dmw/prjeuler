@@ -32,9 +32,9 @@ digitBase n | odd n = round ((2 * 10) ** ((fromIntegral n - 1) / 2))
 
 -- | Applies the Heron Operation recursively until it returns
 -- the round square root and the number of iterations as tuple.
-heronOp :: Integer                 -- ^ Heron Operation to Apply
+heronOpRec :: Integer                 -- ^ Heron Operation to Apply
            -> (Integer, Integer)   -- ^ Pair (RSR, Iterations)
-heronOp a = heronOp a a (digitBase $ numDigits a) 0
+heronOpRec a = heronOp a a (digitBase $ numDigits a) 0
   where heronOp o n m a
           | o == 0 = (0, 0)
           | o == 1 = (1, 1)
@@ -56,7 +56,7 @@ heronCounter a b = sHeronCount a b a 0
   where sHeronCount x y z v
           | y == z = v
           | otherwise = let r = z + 1
-                            s = v + snd (heronOp z)
+                            s = v + snd (heronOpRec z)
                             in sHeronCount x y r s
 
 -- | Calculates the average of Heron Operations in a range
