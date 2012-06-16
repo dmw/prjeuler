@@ -33,6 +33,7 @@ import Data.Bits ()
 import Data.Digits
 import Data.List
 import System.Environment
+import Control.Parallel
 
 
 -- | Calculates the Fibonacci Term N (Binet's Formula)
@@ -55,15 +56,16 @@ isValidDig x xs
                     s = sort xs
                     r = sort $ take l ds
                     t = sort $ take l $ reverse ds
-                in r == s && t == s
+                in r `par` t `pseq` (r == s && t == s)
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital sequence of digits using the reqDigs
 -- sequence.
 isValidPan :: Integer           -- ^ Number to check.
               -> Bool           -- ^ True when is valid.
-isValidPan x = r `seq` isValidDig r [1..9]
+isValidPan x = s `par` r `pseq` isValidDig r s
                where r = fib x
+                     s = [1..9]
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital problem.
@@ -82,5 +84,5 @@ checkRange m n = sCheckRange m n m
 -- required panadigital number.
 main :: IO ()
 main = do [x, y] <- getArgs
-          print $ checkRange (read x) (read y)
+          print $ checkRange (read x :: Integer) (read y :: Integer)
 
