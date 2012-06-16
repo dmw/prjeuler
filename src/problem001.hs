@@ -24,18 +24,19 @@ import System.Environment (getArgs)
 canApply :: [Int]       -- ^ List to Check.
             -> Int      -- ^ Number to be used.
             -> Bool     -- ^ The Returning Check
-canApply xs n = 0 < length (filter (\ x -> n `mod` x == 0 ) xs)
+canApply ~xs n = 0 < length (filter (\ x -> n `mod` x == 0 ) xs)
 
 -- | Checks the sum of the given list xs filtered with canApply
 -- for all numbers between 1 and n.
 sumBelow :: Int         -- ^ The number as limit.
             -> [Int]    -- ^ The list to sum.
             -> Int      -- ^ The sum result.
-sumBelow n xs = sum (filter (canApply xs) [1..n])
+sumBelow n ~xs = sum (filter (canApply xs) [1..n])
 
 -- | The Main Function. It reads the first argument as Integer
 -- and uses it as limit, the remaining arguments are the numbers
 -- to be used as list of valid divisors to check.
 main :: IO ()
-main = do r <- getArgs
-          print $ sumBelow (read $ head r) (fmap read $ tail r)
+main = do
+  r <- getArgs
+  print $ sumBelow (read $ head r) (fmap read $ tail r)

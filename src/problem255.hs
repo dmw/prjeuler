@@ -15,27 +15,36 @@
 module Main (main) where
 
 
-import Data.List
+import Data.List ()
 import System.Environment
 
 
 -- | Returns the number of digits of the given Integer.
 numDigits :: Integer            -- ^ Integer to calculate.
              -> Integer         -- ^ Number of digits.
-numDigits n = round (logBase 10 $ abs $ fromIntegral n) + 1
+numDigits n = rn + 1
+              where rn = round lb :: Integer
+                    lb = (logBase 10 $ abs $ fromIntegral n) :: Double
 
 -- | Base number of the Heron Operation.
 digitBase :: Integer            -- ^ Number as base.
              -> Integer         -- ^ Returning Operation.
-digitBase n | odd n = round ((2 * 10) ** ((fromIntegral n - 1) / 2))
-            | otherwise = round ((7 * 10) ** ((fromIntegral n - 2) / 2))
+digitBase n | odd n = let cl = ((2 * 10) ** ((fromIntegral n - 1) / 2)) :: Double
+                      in round cl
+            | otherwise = let cl = ((7 * 10) ** ((fromIntegral n - 2) / 2)) :: Double
+                          in round cl
 
 -- | Applies the Heron Operation recursively until it returns
 -- the round square root and the number of iterations as tuple.
 heronOpRec :: Integer                 -- ^ Heron Operation to Apply
            -> (Integer, Integer)   -- ^ Pair (RSR, Iterations)
 heronOpRec a = heronOp a a (digitBase $ numDigits a) 0
-  where heronOp o n m a
+  where heronOp :: Integer
+                   -> Integer
+                   -> Integer
+                   -> Integer
+                   -> (Integer, Integer)
+        heronOp o n m a'
           | o == 0 = (0, 0)
           | o == 1 = (1, 1)
           | o == 2 = (1, 1)
@@ -43,8 +52,8 @@ heronOpRec a = heronOp a a (digitBase $ numDigits a) 0
           | n == m = (m, a)
           | otherwise = let x = fromIntegral m
                             y = fromIntegral o / x
-                            s = round ((x + y) / 2)
-                            t = a + 1
+                            s = round (((x + y) / 2) :: Double)
+                            t = a' + 1
                             in heronOp o m s t
 
 -- | Counts the number of Heron Operations in a range of numbers
@@ -80,4 +89,3 @@ main = do [n, m] <- getArgs
           let a = read n
               b = read m
               in print $ heronAvgCalc a b
-

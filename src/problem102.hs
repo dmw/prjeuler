@@ -75,8 +75,9 @@ instance Num LPt where
 
   -- | Defines the signum functon for the LPt data type
   signum x | fstp x < 0 && sndp x < 0 = -1
-  signum x | fstp x > 0 && sndp x > 0 = 1
-  signum x = 0
+           | fstp x > 0 && sndp x > 0 = 1
+           | fstp x == sndp x = 0
+  signum _ = 0
 
 
 -- | Calculates the Cross Product for the given pair
@@ -132,9 +133,9 @@ ptToGlPt p = vertex $ uncurry Vertex3 (ptGlF p) zidxZero
 mkTriangle :: String    -- ^ String to Convert.
               -> LTrg   -- ^ Resulting Triangle.
 mkTriangle s = LTrg { tA = head g, tB = g !! 1, tC = last g }
-               where g = fmap (\x -> LPt (head x, last x) )
-                         $ splitEvery 2 ln
-                     ln = fmap (read . strip) $ splitOn "," s
+  where g = fmap (\x -> LPt (head x, last x) )
+            $ splitEvery 2 ln
+        ln = fmap (read . strip) $ splitOn "," s
 
 -- | Determines the color of the triangle based on its position
 -- if it is containing the point zero.
@@ -180,20 +181,21 @@ trgContained :: LPt             -- ^ Point to Check.
                 -> Bool         -- ^ True if it is contained.
 trgContained p t = sndp crs1 >= 0 && sndp crs2 >= 0 && sndp crs3 >= 0
                    || sndp crs1 <= 0 && sndp crs2 <= 0 && sndp crs3 <= 0
-                   where crs1 = crossPt seg1 (p - tA t)
-                         crs2 = crossPt seg2 (p - tB t)
-                         crs3 = crossPt seg3 (p - tC t)
-                         seg1 = tB t - tA t
-                         seg2 = tC t - tB t
-                         seg3 = tA t - tC t
+  where crs1 = crossPt seg1 (p - tA t)
+        crs2 = crossPt seg2 (p - tB t)
+        crs3 = crossPt seg3 (p - tC t)
+        seg1 = tB t - tA t
+        seg2 = tC t - tB t
+        seg3 = tA t - tC t
 
 -- | Displays a Triangle on the OpenGL screen.
 displayTriangle :: LTrg         -- ^ Triangle to be displayed.
                    -> IO ()     -- ^ Rendered OpenGL Triangle.
-displayTriangle xs = do _ <- renderPrimitive Polygon $ do
-                          trgColor xs
-                          mapM ptToGlPt [tA xs, tB xs, tC xs]
-                        flush
+displayTriangle xs = do
+  _ <- renderPrimitive Polygon $ do
+       trgColor xs
+  _ <- mapM ptToGlPt [tA xs, tB xs, tC xs]
+  flush
 
 
 -- | Displays a list of triangles and sumarizing text using
@@ -201,10 +203,11 @@ displayTriangle xs = do _ <- renderPrimitive Polygon $ do
 displayTriangles :: [LTrg]      -- ^ List of Triangles.
                     -> F.Font   -- ^ Font to be used.
                     -> IO ()    -- ^ Renderized OpengGL.
-displayTriangles xs f = do clear [ ColorBuffer, DepthBuffer ]
-                           mapM_ displayTriangle xs
-                           trgTextCont xs f
-                           flush
+displayTriangles xs f = do
+  clear [ ColorBuffer, DepthBuffer ]
+  mapM_ displayTriangle xs
+  trgTextCont xs f
+  flush
 
 -- | Handles IOError execptions.
 handlerIOError :: IOError       -- ^ Error to handle.
@@ -216,23 +219,24 @@ handlerIOError e = putStrLn (printf "IOError: %s" $ show e)
 
 -- | Main OpenGL Function.
 mainGl :: IO ()
-mainGl = do [x,y,z] <- getArgs
-            inp <- readFile x
-            (progname, _) <- getArgsAndInitialize
-            loadIdentity
-            initialWindowSize $= Size 800 800
-            _ <- createWindow "Triangles Display"
-            matrixMode $= Projection
-            polygonMode $= (Line, Line)
-            font <- F.createPixmapFont "aller.ttf"
-            _ <- F.setFontFaceSize font 24 24
-            _ <- F.setFontDepth font 1.0
-            displayCallback $= displayTriangles (mkTriangles inp (read y) (read z)) font
-            mainLoop
+mainGl = do
+  [x,y,z] <- getArgs
+  inp <- readFile x
+  (progname, _) <- getArgsAndInitialize
+  putStrLn $ printf "Running %s" progname
+  loadIdentity
+  initialWindowSize $= Size 800 800
+  _ <- createWindow "Triangles Display"
+  matrixMode $= Projection
+  polygonMode $= (Line, Line)
+  font <- F.createPixmapFont "aller.ttf"
+  _ <- F.setFontFaceSize font 24 24
+  _ <- F.setFontDepth font 1.0
+  displayCallback $= displayTriangles (mkTriangles inp (read y) (read z)) font
+  mainLoop
 
 
 -- | Main Function.
 main :: IO ()
 main = mainGl `catch` handlerIOError
-
 

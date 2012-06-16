@@ -29,22 +29,19 @@
 module Main (main) where
 
 
-import Data.Bits
+import Data.Bits ()
 import Data.Digits
 import Data.List
 import System.Environment
 
 
--- | Calculates the Fibonacci Term N
-fib :: Int                      -- ^ Term to calculate.
-       -> Integer               -- ^ Fibonacci Term as Result.
-fib n = snd . foldl' fib' (1, 0) . dropWhile not $
-        [testBit n k | k <- let s = bitSize n in [s - 1, s - 2 .. 0]]
+-- | Calculates the Fibonacci Term N (Binet's Formula)
+fib :: Integer                  -- ^ Term to calculate
+       -> Integer               -- ^ Nth Fibonacci Term
+fib n = (round $ phi ** fromIntegral n / sq5) :: Integer
   where
-    fib' (f, g) p
-      | p         = (f * (f + 2 * g), ss)
-      | otherwise = (ss, g * (2 * f - g))
-      where ss = f * f + g * g
+    sq5 = sqrt 5 :: Double
+    phi = (1 + sq5) / 2
 
 -- | Checks if the given number x have valid last n digits
 -- and last n digits
@@ -63,16 +60,16 @@ isValidDig x xs
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital sequence of digits using the reqDigs
 -- sequence.
-isValidPan :: Int               -- ^ Number to check.
+isValidPan :: Integer           -- ^ Number to check.
               -> Bool           -- ^ True when is valid.
 isValidPan x = r `seq` isValidDig r [1..9]
                where r = fib x
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital problem.
-checkRange :: Int                   -- ^ Starting number.
-              -> Int                -- ^ End number
-              -> Int                -- ^ Returning Number (-1 on failure).
+checkRange :: Integer               -- ^ Starting number.
+              -> Integer            -- ^ End number
+              -> Integer            -- ^ Returning Number (-1 on failure).
 checkRange m n = sCheckRange m n m
   where sCheckRange x y z
           | z >= y = -1

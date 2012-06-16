@@ -23,24 +23,21 @@
 module Main (main) where
 
 
-import Data.Bits
-import Data.List
+import Data.Bits ()
+import Data.List ()
 import System.Environment (getArgs)
 
 
--- | Calculates the Fibonacci Term N
-fib :: Int                      -- ^ Term to calculate
-       -> Integer
-fib n = snd . foldl' fib' (1, 0) . dropWhile not $
-        [testBit n k | k <- let s = bitSize n in [s - 1, s - 2 .. 0]]
+-- | Calculates the Fibonacci Term N (Binet's Formula)
+fib :: Integer                  -- ^ Term to calculate
+       -> Integer               -- ^ Nth Fibonacci Term
+fib n = (round $ phi ** fromIntegral n / sq5) :: Integer
   where
-    fib' (f, g) p
-      | p         = (f * (f + 2 * g), ss)
-      | otherwise = (ss, g * (2 * f - g))
-      where ss = f * f + g * g
+    sq5 = sqrt 5 :: Double
+    phi = (1 + sq5) / 2
 
 -- | Sum the even values on the sequence given by limits n and m
-fibEvenSum :: Int               -- ^ Lower bound of the Fibonacci sequence.
+fibEvenSum :: Integer           -- ^ Lower bound of the Fibonacci sequence.
               -> Integer        -- ^ Upper bound of the Fibonacci sequence.
               -> Integer        -- ^ Recursive Sum context.
               -> Integer        -- ^ Returning Sum.
