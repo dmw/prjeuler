@@ -1,4 +1,4 @@
-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 -- |
 -- Module      :  Main
 -- Copyright   :  (c) Daniel Molina Wegener 2012
@@ -30,10 +30,14 @@ module Main (main) where
 
 
 import Data.Bits ()
-import Data.Digits
+import Data.Char
 import Data.List
 import System.Environment
-import Control.Parallel
+
+
+-- | Returns a list of digits for a given number
+digits :: Integer -> [Integer]
+digits n = fmap (\ x -> fromIntegral $! digitToInt x) $ show n
 
 
 -- | Calculates the Fibonacci Term N (Binet's Formula)
@@ -50,20 +54,20 @@ isValidDig :: Integer           -- ^ Number to Check.
               -> [Integer]      -- ^ Sequence to Check.
               -> Bool           -- ^ Is valid or not.
 isValidDig x xs
-  | length (digits 10 x) < length xs = False
-  | otherwise = let ds = digits 10 x
+  | length (digits x) < length xs = False
+  | otherwise = let ds = digits x
                     l = length xs
                     s = sort xs
                     r = sort $ take l ds
                     t = sort $ take l $ reverse ds
-                in r `par` t `pseq` (r == s && t == s)
+                in r == s && t == s
 
 -- | Checks sequentially if the given range covers the
 -- problem of pandigital sequence of digits using the reqDigs
 -- sequence.
 isValidPan :: Integer           -- ^ Number to check.
               -> Bool           -- ^ True when is valid.
-isValidPan x = s `par` r `pseq` isValidDig r s
+isValidPan x = isValidDig r s
                where r = fib x
                      s = [1..9]
 

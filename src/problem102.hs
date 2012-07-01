@@ -192,11 +192,10 @@ trgContained p t = sndp crs1 >= 0 && sndp crs2 >= 0 && sndp crs3 >= 0
 displayTriangle :: LTrg         -- ^ Triangle to be displayed.
                    -> IO ()     -- ^ Rendered OpenGL Triangle.
 displayTriangle xs = do
-  _ <- renderPrimitive Polygon $ do
-       trgColor xs
-  _ <- mapM ptToGlPt [tA xs, tB xs, tC xs]
+  renderPrimitive Polygon
+    $ do trgColor xs
+         mapM_ ptToGlPt [tA xs, tB xs, tC xs]
   flush
-
 
 -- | Displays a list of triangles and sumarizing text using
 -- the given list xs and font f.
