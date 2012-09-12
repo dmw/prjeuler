@@ -7,7 +7,7 @@
 
 -- Usage:
 -- $ ./problem003 600851475143 
--- Where you giving as argument the number you want to evaluate
+-- Where you are giving as argument the number you want to evaluate
 -- <Result Here>
 
 module Main where
@@ -39,4 +39,4 @@ sqrt' :: Integer -> Integer
 sqrt' = floor . sqrt . fromIntegral
 
 main = do x <- getArgs       
-          print ( findLargestPrimeFactor $ read $ head x)           
+          print ( findLargestPrimeFactor $ read $ head x)
