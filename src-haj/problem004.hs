@@ -18,8 +18,8 @@ findLargestPalindrome :: Integer -> Integer
 findLargestPalindrome x = fLPAux (10 ^ x - 1) (10 ^ x - 1) x
 
 fLPAux :: Integer -> Integer -> Integer -> Integer
-fLPAux x 0 n = fLPAux (x - 1) (10 ^ n - 1) n
-fLPAux 0 y n = 0
+fLPAux x 100 n = fLPAux (x - 1) (10 ^ n - 1) n
+fLPAux 100 y n = 0
 fLPAux x y n
     | isPalindrome $ show $ z   = z
     | otherwise                 = fLPAux x (y - 1) n
