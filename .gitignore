@@ -9,3 +9,4 @@
 *.hi
 *.bin
 tmp/
+.DS_Store

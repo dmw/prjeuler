@@ -8,7 +8,7 @@
 -- What is the 10001st prime number?
 
 -- Usage:
--- $ ./problem007 10001
+-- $ ./problem007 10000
 -- <Result Here>
 
 module Main where
