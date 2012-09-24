@@ -7,7 +7,7 @@
 -- Find the sum of all the primes below two million.
 --
 -- Usage:
--- $ ./problem009 2000000
+-- $ ./problem010 2000000
 -- <Result Here>
 
 module Main where

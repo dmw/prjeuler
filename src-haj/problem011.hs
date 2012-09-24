@@ -33,14 +33,63 @@
 -- (up, down, left, right, or diagonally) in the 2020 grid?
 --
 -- Usage:
--- $ ./problem010 <paste grid here>
+-- $ ./problem011
 -- <Result Here>
 
 module Main where
 import System.Environment (getArgs)
+import System.IO
 
-findProduct :: Integer -> Integer
-findSum x = undefined
+findGreatestProduct :: Integer -> Integer
+findGreatestProduct x = undefined
 
-main = do i <- getArgs
-          print (findProduct $ read $ head $ i)
+getHzProducts :: [[Integer]] -> [Integer]
+getHzProducts a = [ (a !! (x - 1) !! (y - 1))
+                  * (a !! (x - 1) !! (y    ))
+                  * (a !! (x - 1) !! (y + 1))
+                  * (a !! (x - 1) !! (y + 2))
+                  | x <- [1..20]
+                  , y <- [1..17]]
+
+getVtProducts :: [[Integer]] -> [Integer]
+getVtProducts a = [ (a !! (x - 1) !! (y - 1))
+                  * (a !! (x    ) !! (y - 1))
+                  * (a !! (x + 1) !! (y - 1))
+                  * (a !! (x + 2) !! (y - 1))
+                  | x <- [1..17]
+                  , y <- [1..20]]
+
+getDwnDiagProducts :: [[Integer]] -> [Integer]
+getDwnDiagProducts a = [ (a !! (x - 1) !! (y - 1))
+                       * (a !! (x    ) !! (y    ))
+                       * (a !! (x + 1) !! (y + 1))
+                       * (a !! (x + 2) !! (y + 2))
+                       | x <- [1..17]
+                       , y <- [1..17]]
+
+getUpDiagProducts :: [[Integer]] -> [Integer]
+getUpDiagProducts a = [ (a !! (x - 1) !! (y - 1))
+                      * (a !! (x - 2) !! (y    ))
+                      * (a !! (x - 3) !! (y + 1))
+                      * (a !! (x - 4) !! (y + 2))
+                      | x <- [4..20]
+                      , y <- [1..17]]
+
+createMatrix :: [Integer] -> [[Integer]] -> [[Integer]]
+createMatrix [] matrix = matrix
+createMatrix xs matrix = createMatrix ys (y:matrix)
+    where y  = take 20 $ xs
+          ys = drop 20 $ xs
+
+getIntegers :: String -> [Integer]
+getIntegers str = fmap (\x -> read x :: Integer) $ words str
+
+main = do
+        handle <- openFile "../data/problem011.txt" ReadMode
+        contents <- hGetContents handle
+        let numberMatrix = reverse $ createMatrix (getIntegers contents) []
+        print $ maximum (   getHzProducts       numberMatrix
+                        ++  getVtProducts       numberMatrix
+                        ++ getDwnDiagProducts   numberMatrix
+                        ++ getUpDiagProducts    numberMatrix)
+        hClose handle
