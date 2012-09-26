@@ -27,10 +27,17 @@
 -- <Result Here>
 
 module Main where
+import Data.List
 import System.Environment (getArgs)
 
-findNumber :: Integer -> Integer
-findNumber n = undefined
+findNumber :: Integer -> Maybe Integer
+findNumber n = find (hasAtLeastNDivisors n) 
+                        [round $ (x * (x + 1) ) / 2  | x <- [1..] ]
+
+hasAtLeastNDivisors :: Integer -> Integer -> Bool
+hasAtLeastNDivisors n x = n < ( toInteger 
+                              $ length 
+                              $ [y | y <- reverse [1..(x-1)], x `mod` y == 0])
 
 main = do i <- getArgs
           print (findNumber $ read $ head $ i)
