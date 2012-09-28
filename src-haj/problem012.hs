@@ -27,17 +27,25 @@
 -- <Result Here>
 
 module Main where
-import Data.List
 import System.Environment (getArgs)
 
-findNumber :: Integer -> Maybe Integer
-findNumber n = find (hasAtLeastNDivisors n) 
-                        [round $ (x * (x + 1) ) / 2  | x <- [1..] ]
+findNumber :: Integer -> Integer
+findNumber d = fNAux 1 d
 
-hasAtLeastNDivisors :: Integer -> Integer -> Bool
-hasAtLeastNDivisors n x = n < ( toInteger 
-                              $ length 
-                              $ [y | y <- reverse [1..(x-1)], x `mod` y == 0])
+fNAux :: Integer -> Integer -> Integer
+fNAux x d
+    | ((countDivisors y) >= d) = y
+    | otherwise                = fNAux (x + 1) d
+    where y = (x * (x + 1)) `div` 2
+
+countDivisors :: Integer -> Integer
+countDivisors n = cDAux n n 0
+
+cDAux :: Integer -> Integer -> Integer -> Integer
+cDAux 0 _ acc = acc
+cDAux x n acc
+    | (n `mod` x == 0)  = cDAux (x - 1) n (acc + 1)
+    | otherwise         = cDAux (x - 1) n acc
 
 main = do i <- getArgs
           print (findNumber $ read $ head $ i)
