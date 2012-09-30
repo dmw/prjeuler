@@ -25,6 +25,9 @@
 -- Usage:
 -- $ ./problem012 500
 -- <Result Here>
+--
+-- Haj: Comentary, this solution in an MBP took 12 hours 50 minutes.
+-- Good point is that it uses just 3.3 MB RAM.
 
 module Main where
 import System.Environment (getArgs)
